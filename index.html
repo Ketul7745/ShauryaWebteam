@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+  <style>
+    /* Global styles */
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Button style for opening the modal */
+    .modal-button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Modal style */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    /* Modal content style */
+    .modal-content {
+      background-image: url("URL_OF_IMAGE");
+      background-size: cover;
+      background-position: center;
+      padding: 40px;
+      border-radius: 10px;
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Form styles */
+    .form-container {
+      background-color: lightyellow;
+      padding: 40px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    select[multiple] {
+      height: auto;
+    }
+
+    button[type="submit"],
+    button[type="button"] {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Error message style */
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: left;
+    }
+
+    /* Heading style */
+    .form-heading {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 40px;
+    }
+
+    /* Counter style */
+    .counter {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* Logo style */
+    .logo {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 80px;
+      height: 80px;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background-color: #333;
+      color: #f2f2f2;
+    }
+
+    body.dark-mode .modal-content {
+      background-color: #222;
+    }
+
+    body.dark-mode .form-container {
+      background-color: #444;
+    }
+
+    body.dark-mode input,
+    body.dark-mode select {
+      background-color: #555;
+      color: #f2f2f2;
+    }
+
+    body.dark-mode .error-message {
+      color: #ff5555;
+    }
+
+    body.dark-mode button[type="submit"],
+    body.dark-mode button[type="button"] {
+      background-color: #00cc66;
+    }
+
+    /* Toggle mode styles */
+    .toggle-mode {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f2f2f2;
+      border-radius: 20px;
+      padding: 5px;
+      z-index: 999;
+    }
+
+    .toggle-mode input[type="radio"] {
+      display: none;
+    }
+
+    .toggle-mode label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .toggle-mode label span {
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #f2f2f2;
+      transition: transform 0.3s;
+    }
+
+    .toggle-mode input[type="radio"]:checked + label span {
+      background-color: #007bff;
+    }
+
+    .toggle-mode label:first-child {
+      margin-right: 10px;
+    }
+
+    .toggle-mode label:last-child {
+      margin-left: 10px;
+    }
+
+    /* Toggle mode label styles */
+    .toggle-mode-label {
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Home page button to trigger the modal -->
+  <button class="modal-button" id="modalBtn">Open Signup Form</button>
+
+  <!-- Counter -->
+  <div class="counter" id="counter">Registered Users: 0</div>
+
+  <!-- Toggle mode -->
+  <div class="toggle-mode">
+    <input type="radio" id="darkMode" name="mode" checked>
+    <label for="darkMode"><span></span></label>
+    <input type="radio" id="lightMode" name="mode">
+    <label for="lightMode"><span></span></label>
+  </div>
+
+  <!-- The modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="form-container">
+        <h2 class="form-heading">Shaurya IIT Kharagpur 2023 Form</h2>
+        <img class="logo" src="URL_OF_LOGO" alt="Logo">
+        <form id="signupForm">
+          <label for="name">Name</label>
+          <input type="text" id="name" required>
+          <span class="error-message" id="nameError"></span>
+          
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+          <span class="error-message" id="emailError"></span>
+          
+          <label for="password">Password</label>
+          <input type="password" id="password" minlength="8" required>
+          <span class="error-message" id="passwordError"></span>
+          
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" pattern="[0-9]{10}" required>
+          <span class="error-message" id="phoneError"></span>
+          
+          <label for="gender">Gender</label>
+          <select id="gender" required>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+          
+          <label for="sports">Sports of Interest</label>
+          <select id="sports" multiple required>
+            <option value="cricket">Cricket</option>
+            <option value="football">Football</option>
+            <option value="basketball">Basketball</option>
+            <option value="aquatics">Aquatics</option>
+            <option value="athletics">Athletics</option>
+          </select>
+          
+          <button type="submit">Signup</button>
+          <button type="button" id="cancelBtn">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get the modal and button elements
+    const modal = document.getElementById('modal');
+    const modalBtn = document.getElementById('modalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // Open the modal when the button is clicked
+    modalBtn.addEventListener('click', function() {
+      modal.style.display = 'flex';
+    });
+
+    // Close the modal when clicking the cancel button
+    cancelBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    // Counter functionality
+    let counterValue = 0;
+    const counter = document.getElementById('counter');
+    counter.textContent = `Registered Users: ${counterValue}`;
+
+    // Validate name field on input
+    const nameField = document.getElementById('name');
+    const nameError = document.getElementById('nameError');
+
+    nameField.addEventListener('input', function() {
+      const name = nameField.value.trim();
+      const namePattern = /^[a-zA-Z]+$/;
+
+      if (name.length < 5 || !namePattern.test(name)) {
+        nameError.textContent = "Name must be at least 5 characters long and contain only English alphabets.";
+      } else {
+        nameError.textContent = "";
+      }
+    });
+
+    // Validate email field on input
+    const emailField = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+
+    emailField.addEventListener('input', function() {
+      const email = emailField.value.trim();
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+      if (email.length > 0 && !emailPattern.test(email)) {
+        emailError.textContent = "Email must be a valid Gmail address.";
+      } else {
+        emailError.textContent = "";
+      }
+    });
+
+    // Append "@gmail.com" to email field if it doesn't end with it
+    emailField.addEventListener('blur', function() {
+      const email = emailField.value.trim();
+
+      if (email.length > 0 && !email.endsWith("@gmail.com")) {
+        emailField.value = email + "@gmail.com";
+        emailError.textContent = ""; // Clear the error message
+      }
+    });
+
+    // Validate password field on input
+    const passwordField = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+
+    passwordField.addEventListener('input', function() {
+      const password = passwordField.value;
+
+      if (password.length < 8) {
+        passwordError.textContent = "Password must be at least 8 characters long.";
+      } else {
+        passwordError.textContent = "";
+      }
+    });
+
+    // Validate phone number field on input
+    const phoneField = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+
+    phoneField.addEventListener('input', function() {
+      const phone = phoneField.value.trim();
+      const phonePattern = /^[0-9]{10}$/;
+
+      if (!phonePattern.test(phone)) {
+        phoneError.textContent = "Phone number must be exactly 10 digits and contain only numbers.";
+      } else {
+        phoneError.textContent = "";
+      }
+    });
+
+    // Print form data to the console when submitted and update counter
+    const signupForm = document.getElementById('signupForm');
+
+    signupForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Retrieve form input values
+      const name = nameField.value;
+      const email = emailField.value;
+      const password = passwordField.value;
+      const phone = phoneField.value;
+      const gender = document.getElementById('gender').value;
+      const sports = Array.from(document.getElementById('sports').selectedOptions).map(option => option.value);
+
+      // Log form data to the console
+      console.log('Name:', name);
+      console.log('Email:', email);
+      console.log('Password:', password);
+      console.log('Phone Number:', phone);
+      console.log('Gender:', gender);
+      console.log('Sports of Interest:', sports);
+
+      // Send data to the server (Replace with actual server endpoint)
+      sendDataToServer(name, email, password, phone, gender, sports);
+
+      // Update counter and display the number of registered users
+      counterValue++;
+      counter.textContent = `Registered Users: ${counterValue}`;
+
+      // Reset the form for registering another user
+      signupForm.reset();
+    });
+
+    // Function to send data to the server (Replace with actual implementation)
+    function sendDataToServer(name, email, password, phone, gender, sports) {
+      // Simulated server request
+      setTimeout(() => {
+        console.log("Data sent to server:", {
+          name,
+          email,
+          password,
+          phone,
+          gender,
+          sports
+        });
+      }, 1000);
+    }
+
+    // Toggle mode functionality
+    const darkModeRadio = document.getElementById('darkMode');
+    const lightModeRadio = document.getElementById('lightMode');
+
+    darkModeRadio.addEventListener('change', function() {
+      document.body.classList.add('dark-mode');
+    });
+
+    lightModeRadio.addEventListener('change', function() {
+      document.body.classList.remove('dark-mode');
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
